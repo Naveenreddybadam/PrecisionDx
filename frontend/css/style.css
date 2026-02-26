@@ -1,0 +1,36 @@
+body {
+  font-family: Arial;
+  background: #f2f2f2;
+  text-align: center;
+}
+
+.login-box {
+  width: 300px;
+  margin: 120px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+}
+
+input, button {
+  width: 90%;
+  margin: 10px;
+  padding: 10px;
+}
+
+button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+#result {
+  margin-top: 30px;
+}
+
+#gradcam {
+  width: 300px;
+  margin-top: 15px;
+  border: 2px solid #444;
+}

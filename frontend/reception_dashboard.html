@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Reception Dashboard - PrecisionDx</title>
+
+<style>
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:#f1f5f9;
+}
+
+/* NAVBAR */
+.navbar{
+    background:#0f172a;
+    color:white;
+    padding:15px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.navbar h1{
+    margin:0;
+    font-size:20px;
+}
+
+.navbar button{
+    background:#ef4444;
+    border:none;
+    padding:8px 14px;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.navbar button:hover{
+    background:#dc2626;
+}
+
+.container{
+    padding:30px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.08);
+    margin-bottom:25px;
+}
+
+input, select{
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+
+button.primary{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:10px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+button.primary:hover{
+    background:#1e40af;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th, td{
+    padding:8px;
+    text-align:center;
+    border:1px solid #ddd;
+}
+
+th{
+    background:#e2e8f0;
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <h1>🧠 PrecisionDx - Reception Panel</h1>
+    <div>
+        <span id="usernameDisplay"></span>
+        <button onclick="logout()">Logout</button>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- ADD PATIENT -->
+    <div class="card">
+        <h3>Add New Patient</h3>
+
+        <input type="text" id="newName" placeholder="Patient Name">
+        <input type="number" id="newAge" placeholder="Age">
+
+        <select id="newGender">
+            <option value="">Select Gender</option>
+            <option>Male</option>
+            <option>Female</option>
+        </select>
+
+        <button class="primary" onclick="addPatient()">Add Patient</button>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="card">
+        <h3>Search Patient by OP Number</h3>
+        <input type="text" id="searchInput" placeholder="Enter OP number..." onkeyup="filterTable()">
+    </div>
+
+    <!-- PATIENT LIST -->
+    <div class="card">
+        <h3>Patient List</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>OP Number</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                </tr>
+            </thead>
+            <tbody id="patientTable"></tbody>
+        </table>
+
+    </div>
+
+</div>
+
+<script src="reception_dashboard.js"></script>
+
+<script>
+/* ROLE CHECK */
+if(localStorage.getItem("role") !== "reception"){
+    window.location.href="index.html";
+}else{
+    document.getElementById("usernameDisplay").innerText =
+        "Welcome " + localStorage.getItem("username");
+}
+
+function logout(){
+    localStorage.clear();
+    window.location.href="index.html";
+}
+</script>
+
+</body>
+</html>

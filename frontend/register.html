@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Register - PrecisionDx</title>
+
+<style>
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.card{
+    background:white;
+    width:380px;
+    padding:35px;
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+    text-align:center;
+}
+
+.logo{
+    font-size:24px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+h2{
+    margin-bottom:20px;
+    color:#1e3a8a;
+}
+
+input, select{
+    width:100%;
+    padding:11px;
+    margin-bottom:12px;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+
+button{
+    width:100%;
+    padding:11px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#1e40af;
+}
+
+.error{
+    color:red;
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+.success{
+    color:green;
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+.link{
+    margin-top:15px;
+    font-size:14px;
+}
+.link a{
+    color:#2563eb;
+    text-decoration:none;
+}
+</style>
+
+</head>
+<body>
+
+<div class="card">
+
+<div class="logo">🧠 PrecisionDx</div>
+<h2>User Registration</h2>
+
+<div id="message"></div>
+
+<form id="registerForm">
+
+<input type="text" id="username" placeholder="Username" required>
+
+<input type="password" id="password" placeholder="Password" required>
+
+<input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+
+<select id="role" required>
+    <option value="">Select Role</option>
+    <option value="doctor">Doctor</option>
+    <option value="reception">Reception</option>
+</select>
+
+<button type="submit">Register</button>
+
+</form>
+
+<div class="link">
+Already have account? <a href="index.html">Login</a>
+</div>
+
+</div>
+
+<script>
+
+const BACKEND_URL = "http://127.0.0.1:5000";
+
+document.getElementById("registerForm").addEventListener("submit", async (e)=>{
+    e.preventDefault();
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+    const role = document.getElementById("role").value;
+    const message = document.getElementById("message");
+
+    message.innerHTML="";
+
+    if(password !== confirmPassword){
+        message.innerHTML="<div class='error'>Passwords do not match</div>";
+        return;
+    }
+
+    if(password.length < 6){
+        message.innerHTML="<div class='error'>Password must be at least 6 characters</div>";
+        return;
+    }
+
+    try{
+        const res = await fetch(`${BACKEND_URL}/register`,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({username,password,role})
+        });
+
+        const data = await res.json();
+
+        if(res.ok){
+            message.innerHTML="<div class='success'>Registered Successfully! Redirecting...</div>";
+            setTimeout(()=>{
+                window.location.href="index.html";
+            },1500);
+        }else{
+            message.innerHTML=`<div class='error'>${data.error}</div>`;
+        }
+
+    }catch{
+        message.innerHTML="<div class='error'>Backend not running</div>";
+    }
+
+});
+</script>
+
+</body>
+</html>

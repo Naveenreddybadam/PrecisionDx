@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Detection History - PrecisionDx</title>
+
+<style>
+body{
+    font-family:'Segoe UI', sans-serif;
+    background:#f1f5f9;
+    padding:30px;
+}
+
+h2{
+    text-align:center;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+    background:white;
+}
+
+th, td{
+    padding:8px;
+    border:1px solid #ddd;
+    text-align:center;
+}
+
+th{
+    background:#e2e8f0;
+}
+
+.high{ background:#fecaca; }
+.medium{ background:#fef3c7; }
+
+input{
+    padding:8px;
+    width:300px;
+    margin-bottom:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🧠 Detection History</h2>
+
+<input type="text" id="searchInput" placeholder="Search by OP or Name" onkeyup="filterTable()">
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>OP No</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Grade</th>
+            <th>Confidence</th>
+            <th>Risk</th>
+            <th>Trend</th>
+            <th>Date</th>
+            <th>Report</th>
+        </tr>
+    </thead>
+    <tbody id="historyTable"></tbody>
+</table>
+
+<script>
+
+const BACKEND_URL = "http://127.0.0.1:5000";
+
+function loadHistory() {
+
+    fetch(`${BACKEND_URL}/patient_trend_all`)
+    .then(res => res.json())
+    .then(data => {
+
+        const table = document.getElementById("historyTable");
+        table.innerHTML = "";
+
+        data.forEach(r => {
+
+            let rowClass = "";
+            if (r.risk_level === "HIGH") rowClass = "class='high'";
+            else if (r.risk_level === "MEDIUM") rowClass = "class='medium'";
+
+            table.innerHTML += `
+                <tr ${rowClass}>
+                    <td>${r.report_id}</td>
+                    <td>${r.op_number}</td>
+                    <td>${r.patient_name}</td>
+                    <td>${r.tumor_type}</td>
+                    <td>${r.grade}</td>
+                    <td>${r.confidence ? r.confidence.toFixed(2) : "-"}</td>
+                    <td>${r.risk_level}</td>
+                    <td>${r.trend}</td>
+                    <td>${r.created_at}</td>
+                    <td>
+                        <button onclick="downloadReport(${r.report_id})">
+                            PDF
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+    });
+}
+
+function downloadReport(id){
+    window.open(`${BACKEND_URL}/generate_report/${id}`, "_blank");
+}
+
+function filterTable(){
+    const input = document.getElementById("searchInput").value.toLowerCase();
+    const rows = document.querySelectorAll("#historyTable tr");
+
+    rows.forEach(row => {
+        const op = row.cells[1].innerText.toLowerCase();
+        const name = row.cells[2].innerText.toLowerCase();
+        row.style.display =
+            op.includes(input) || name.includes(input) ? "" : "none";
+    });
+}
+
+window.onload = loadHistory;
+
+</script>
+
+</body>
+</html>

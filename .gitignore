@@ -1,0 +1,31 @@
+# Virtual environments
+venv/
+tf_env/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Models
+*.h5
+*.keras
+backend/models/
+
+# Dataset folders
+dataset/
+dataset_model1/
+dataset_model2/
+
+# Database
+*.db
+
+# Reports
+*.pdf
+backend/results/
+
+# Upload folders
+static/uploads/
+static/results/
+
+# Test files
+test.jpg

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Doctor Dashboard - PrecisionDx</title>
+
+<style>
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:#f1f5f9;
+}
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+}
+
+.badge-high {
+    background-color: #dc2626; /* red */
+}
+
+.badge-medium {
+    background-color: #f59e0b; /* yellow */
+}
+
+.badge-low {
+    background-color: #16a34a; /* green */
+}
+/* NAVBAR */
+.navbar{
+    background:#0f172a;
+    color:white;
+    padding:15px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.navbar h1{
+    margin:0;
+    font-size:20px;
+}
+
+.navbar button{
+    background:#ef4444;
+    border:none;
+    padding:8px 14px;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.navbar button:hover{
+    background:#dc2626;
+}
+
+.container{
+    padding:30px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.08);
+    margin-bottom:25px;
+}
+
+input, select{
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+
+button.primary{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:10px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+button.primary:hover{
+    background:#1e40af;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th, td{
+    padding:8px;
+    text-align:center;
+    border:1px solid #ddd;
+}
+
+th{
+    background:#e2e8f0;
+}
+
+.high{ background:#fecaca; }
+.medium{ background:#fef3c7; }
+
+img{
+    border-radius:4px;
+}
+
+#result{
+    margin-top:10px;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <h1>🧠 PrecisionDx - Doctor Panel</h1>
+    <div>
+        <span id="doctorName"></span>
+        <button onclick="logout()">Logout</button>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- MRI DETECTION -->
+    <div class="card">
+        <h3>Select Patient (OP Number) & Upload MRI</h3>
+
+        <select id="patientSelect"></select>
+        <input type="file" id="imageInput" accept="image/*">
+        <button class="primary" onclick="detectTumor()">Detect Tumor</button>
+
+        <div id="result"></div>
+        <img id="previewImage" width="300" style="display:none; margin-top:10px;">
+    </div>
+
+    <!-- SEARCH -->
+    <div class="card">
+        <h3>Search Patient History</h3>
+        <input type="text" id="searchInput" placeholder="Search by name..." onkeyup="filterTable()">
+        <select id="filterSelect" onchange="applyFilter()">
+        <option value="all">All Records</option>
+        <option value="today">Today</option>
+        <option value="week">Last 7 Days</option>
+        </select>
+    </div>
+    <div class="card">
+    <h3>Today Summary</h3>
+    <div id="summaryBox" style="display:flex; gap:20px;"></div>
+    </div>
+    <!-- HISTORY -->
+    <div class="card">
+        <h3>Detection History (Priority Based)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Report ID</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Tumor</th>
+                    <th>Grade</th>
+                    <th>Confidence</th>
+                    <th>Risk</th>
+                    <th>Date</th>
+                    <th>Image</th>
+                    <th>Report</th>
+                </tr>
+            </thead>
+            <tbody id="historyTable"></tbody>
+        </table>
+    </div>
+
+</div>
+<div class="card">
+    <h3>Model Performance</h3>
+    <div id="metricsBox">
+        Loading metrics...
+    </div>
+</div>
+<script src="doctor_dashboard.js"></script>
+
+<script>
+/* ROLE CHECK */
+if(localStorage.getItem("role") !== "doctor"){
+    window.location.href="index.html";
+}else{
+    document.getElementById("doctorName").innerText =
+        "Welcome Dr. " + localStorage.getItem("username");
+}
+
+function logout(){
+    localStorage.clear();
+    window.location.href="index.html";
+}
+</script>
+
+</body>
+</html>
